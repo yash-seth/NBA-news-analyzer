@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Players News</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('./nba_news - Copy.csv')
+                .then(response => response.text())
+                .then(text => {
+                    var rowData = text.split('\n');
+                    player_counter = 0;
+
+                    for (var row = 1; row < rowData.length-1; row++) {
+                        var iDiv = document.createElement('div');
+                        iDiv.id = 'player-card';
+                        iDiv.className = 'player-card';
+                        var innerDivName = document.createElement('div');
+                        var innerDivDesc = document.createElement('div');
+                        var innerDivKeywords = document.createElement('div');
+                        var innerDivSummary = document.createElement('div');
+                        var innerDivIMG = document.createElement("IMG");
+
+                        rowColData = rowData[row].split(',');
+
+                        var counter = 0;
+                        var color = ""
+
+                        for (var col = 0; col < rowColData.length; col++) {
+                            if(counter == 0) {
+                                counter++;
+                                innerDivName.className = "player-name";
+                                innerDivName.innerHTML = "<b>Name: </b>" +rowColData[col];
+                                innerDivName.style.fontWeight = "bold";
+                                innerDivName.style.fontSize = "18px";
+
+                            } else if(counter == 1) {
+                                counter++;
+                                innerDivDesc.className = 'player-news-desc';
+                                innerDivDesc.innerHTML = "<b>Description: </b>" + rowColData[col];
+                                innerDivDesc.style.fontSize = "16px";
+                            }
+                            else if(counter == 2) {
+                                counter++;
+                                if(rowColData[col] == "POSITIVE") {
+                                    color = "#4dff4d"
+                                } else {
+                                    color = "#ff6666"
+                                }
+                            }
+                            else if(counter == 3) {
+                                counter++;
+                                continue;
+                            }
+                            else if(counter == 4){
+                                counter++;
+                                innerDivKeywords.className = 'player-keywords';
+                                innerDivKeywords.innerHTML = "<b>Keywords: </b>" + rowColData[col].split(/[-]+/).join(', ');
+                                innerDivKeywords.style.fontSize = "16px";
+
+                            } else if(counter == 5) {
+                                counter++;
+                                innerDivSummary.className = 'player-summary';
+                                innerDivSummary.innerHTML = "<b>Summary: </b>" +rowColData[col];
+                                innerDivSummary.style.fontSize = "16px";
+
+                            } 
+                            else if(counter == 6) {
+                                counter++;
+                                innerDivIMG.className = 'player-img';
+                                innerDivIMG.src = rowColData[col];
+                                innerDivIMG.height = "200";
+
+                            } else {
+                                counter++;
+                            }
+
+                            iDiv.appendChild(innerDivIMG);
+                            iDiv.appendChild(innerDivName);
+                            iDiv.appendChild(innerDivDesc);
+                            iDiv.appendChild(innerDivKeywords);
+                            iDiv.appendChild(innerDivSummary);
+                            iDiv.style.backgroundColor = color;
+                            document.getElementsByClassName('player-cards')[0].appendChild(iDiv);
+                        }
+                }})
+        }, false);
+
+        
+    </script>
+    <style type="text/css">
+        table th, table td{
+        padding: 5px;
+    }
+    </style>
+    <h2 id="heading">NBA Player News</h2>
+    <div class="player-cards">
+
+    </div>
+</body>
+</html>
